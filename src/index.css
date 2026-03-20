@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Fredoka', 'Nunito', system-ui, sans-serif;
+}
+
+@keyframes gradientBg {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+body {
+  @apply text-slate-800 m-0 p-0;
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #c4b5fd, #fbcfe8, #bae6fd, #bbf7d0);
+  background-size: 400% 400%;
+  animation: gradientBg 14s ease infinite;
+}
+
+/* Soft dot-grid texture */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.55) 2px, transparent 2px);
+  background-size: 28px 28px;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
