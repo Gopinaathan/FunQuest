@@ -58,12 +58,20 @@ const DIFFICULTY = {
   hard:   { icon: '🔥', label: 'Hard',   desc: 'Are you a genius?!',      btn: 'bg-rose-400 border-rose-600 shadow-[0_7px_0_0_#9f1239] hover:bg-rose-300 active:translate-y-[7px] active:shadow-[0_0px_0_0_#9f1239] text-white' },
 };
 
+// Per-question time limit (seconds)
+const TIME_PER_LEVEL = {
+  easy: 30,
+  medium: 20,
+  hard: 10,
+};
+
 function App() {
   const [gameState, setGameState] = useState('start');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});   // { [questionIndex]: option }
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [difficulty, setDifficulty] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(30);
 
   // ── Derived state ──────────────────────────────────────────
   const selectedAnswer = answers[currentIndex] ?? null;
@@ -76,9 +84,10 @@ function App() {
     playSound('click');
     const filtered = allQuestions.filter(q => q.difficulty === diff);
     setQuestions(filtered.length > 0 ? filtered : allQuestions);
+    setDifficulty(diff);
     setCurrentIndex(0);
     setAnswers({});
-    setTimeLeft(15);
+    setTimeLeft(TIME_PER_LEVEL[diff] ?? 30);
     setGameState('playing');
   };
 
@@ -107,9 +116,9 @@ function App() {
   // Reset timer when navigating to an unanswered question
   useEffect(() => {
     if (gameState === 'playing' && !answers[currentIndex]) {
-      setTimeLeft(15);
+      setTimeLeft(TIME_PER_LEVEL[difficulty] ?? 30);
     }
-  }, [currentIndex, gameState]);
+  }, [currentIndex, gameState, difficulty]);
 
   // Timer countdown
   useEffect(() => {
@@ -221,7 +230,11 @@ function App() {
           </div>
 
           <div className="bg-white/90 rounded-2xl p-1.5 shadow-md border-[3px] border-white/60">
-            <CircularTimer timeLeft={timeLeft} answered={!!selectedAnswer} />
+            <CircularTimer
+              timeLeft={timeLeft}
+              maxTime={TIME_PER_LEVEL[difficulty] ?? 30}
+              answered={!!selectedAnswer}
+            />
           </div>
         </div>
 
